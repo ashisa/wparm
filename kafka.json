@@ -16,7 +16,7 @@
     },
     "numberOfInstances": {
       "type": "int",
-      "defaultValue": 5,
+      "defaultValue": 2,
       "minValue": 2,
       "maxValue": 5,
       "metadata": {
@@ -48,7 +48,7 @@
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('virtualNetworkName'),variables('subnet1Name'))]",
-    "availabilitySetName": "webAvSet",
+    "availabilitySetName": "kafkaAvSet",
     "Ubuntu": {
       "publisher": "Canonical",
       "offer": "UbuntuServer",
@@ -98,7 +98,7 @@
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('webnic', copyindex(1))]",
+      "name": "[concat('kafkanic', copyindex(1))]",
       "apiVersion": "2016-03-30",
       "location": "[parameters('location')]",
       "copy": {
@@ -124,7 +124,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('webvm', copyIndex(1))]",
+      "name": "[concat('kafkavm', copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
       "location": "[parameters('location')]",
       "copy": {
@@ -155,7 +155,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('webnic', copyindex(1)))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('kafkanic', copyindex(1)))]"
             }
           ]
         }
@@ -167,7 +167,7 @@
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat('webvm', copyIndex(1)))]"
+            "[resourceId('Microsoft.Compute/virtualMachines', concat('kafkavm', copyIndex(1)))]"
           ],
           "tags": {
             "displayName": "config"
@@ -179,9 +179,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "https://raw.githubusercontent.com/ashisa/wparm/master/nginx.sh"
+                "https://raw.githubusercontent.com/ashisa/wparm/master/kafka.sh"
               ],
-              "commandToExecute": "bash nginx.sh"
+              "commandToExecute": "bash kafka.sh"
             }
           }
         }
