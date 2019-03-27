@@ -158,34 +158,34 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('nic', copyindex(1)))]"
             }
           ]
-        },
-        "resources": [
-          {
-            "name": "config",
-            "type": "extensions",
-            "location": "[parameters('location')]",
-            "apiVersion": "2016-03-30",
-            "dependsOn": [
-              "[resourceId('Microsoft.Compute/virtualMachines', concat('webvm', copyIndex(1)))]"
-            ],
-            "tags": {
-              "displayName": "config"
-            },
-            "properties": {
-              "publisher": "Microsoft.OSTCExtensions",
-              "type": "CustomScriptForLinux",
-              "typeHandlerVersion": "1.4",
-              "autoUpgradeMinorVersion": true,
-              "settings": {
-                "fileUris": [
-                  "https://raw.githubusercontent.com/ashisa/wparm/master/nginx.sh"
-                ],
-                "commandToExecute": "bash nginx.sh"
-              }
+        }
+      },
+      "resources": [
+        {
+          "name": "config",
+          "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat('webvm', copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "config"
+          },
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "https://raw.githubusercontent.com/ashisa/wparm/master/nginx.sh"
+              ],
+              "commandToExecute": "bash nginx.sh"
             }
           }
-        ]
-      }
+        }
+      ]
     }
   ]
 }
