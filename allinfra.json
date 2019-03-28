@@ -51,18 +51,11 @@
         "description": "Number of Kafka VMs to deploy"
       }
     },
-    "ElasticSearchVMInstance": {
+    "ESVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
-        "description": "Number of Elastci Search VMs to deploy"
-      }
-    },
-    "VMInstances": {
-      "type": "int",
-      "defaultValue": 0,
-      "metadata": {
-        "description": "Number of VMs to deploy"
+        "description": "Number of Elastic Search VMs to deploy"
       }
     },
     "VMPrefix": {
@@ -100,22 +93,40 @@
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('virtualNetworkName'),variables('subnet1Name'))]",
-    "availabilitySetName": "[concat(parameters('VMPrefix'), 'avset')]",
-    "scriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', parameters('ScriptName'))]",
-    "scriptCommand": "[concat('bash ', parameters('ScriptName'))]"
+    "webVMPrefix": "webvm",
+    "appVMPrefix": "appvm",
+    "emailVMPrefix": "emailvm",
+    "mongoVMPrefix": "mongovm",
+    "graphVMPrefix": "graphvm",
+    "mysqlVMPrefix": "mysqlvm",
+    "kafkaVMPrefix": "kafkavm",
+    "esVMPrefix": "esvm",
+    "webavset": "[concat(variables('webVMPrefix'), 'avset')]",
+    "appavset": "[concat(variables('appVMPrefix'), 'avset')]",
+    "emailavset": "[concat(variables('emailVMPrefix'), 'avset')]",
+    "mongoavset": "[concat(variables('mongoVMPrefix'), 'avset')]",
+    "graphavset": "[concat(variables('graphVMPrefix'), 'avset')]",
+    "mysqlavset": "[concat(variables('mysqlVMPrefix'), 'avset')]",
+    "kafkaavset": "[concat(variables('kafkaVMPrefix'), 'avset')]",
+    "esavset": "[concat(variables('esVMPrefix'), 'avset')]",
+    "webScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
+    "webScriptCommand": "[concat('bash ', 'webvm.sh')]",
+    "appScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
+    "appScriptCommand": "[concat('bash ', 'webvm.sh')]",
+    "emailScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
+    "emailScriptCommand": "[concat('bash ', 'webvm.sh')]",
+    "mongoScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
+    "mongoScriptCommand": "[concat('bash ', 'webvm.sh')]",
+    "graphScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
+    "graphScriptCommand": "[concat('bash ', 'webvm.sh')]",
+    "mysqlScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
+    "mysqlScriptCommand": "[concat('bash ', 'webvm.sh')]",
+    "kafkaScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
+    "kafkaScriptCommand": "[concat('bash ', 'webvm.sh')]",
+    "esScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
+    "esScriptCommand": "[concat('bash ', 'webvm.sh')]"
   },
   "resources": [
-    {
-      "type": "Microsoft.Compute/availabilitySets",
-      "name": "[variables('availabilitySetName')]",
-      "apiVersion": "2016-04-30-preview",
-      "location": "[parameters('Location')]",
-      "properties": {
-        "platformFaultDomainCount": 2,
-        "platformUpdateDomainCount": 2,
-        "managed": true
-      }
-    },
     {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
@@ -138,13 +149,110 @@
       }
     },
     {
+      "condition": "[equals(parameters('WebVMInstance'),0)]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('webavset')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('AppVMInstance'),0)]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('appavset')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('EmailVMInstance'),0)]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('emailavset')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('MongoVMInstance'),0)]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('mongoavset')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('GraphVMInstance'),0)]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('graphavset')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('MySQLVMInstance'),0)]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('mysqlavset')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('KafkaVMInstance'),0)]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('kafkaavset')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('ESVMInstance'),0)]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('esavset')]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('WebVMInstance'),0)]",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('VMPrefix'), 'nic', copyindex(1))]",
+      "name": "[concat(variables('webVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
       "location": "[parameters('Location')]",
       "copy": {
         "name": "nicLoop",
-        "count": "[parameters('VMInstances')]"
+        "count": "[parameters('WebVMInstance')]"
       },
       "dependsOn": [
         "[variables('virtualNetworkName')]"
@@ -164,27 +272,217 @@
       }
     },
     {
+      "condition": "[equals(parameters('AppVMInstance'),0)]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('appVMPrefix'), 'nic', copyindex(1))]",
+      "apiVersion": "2016-03-30",
+      "location": "[parameters('Location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('AppVMInstance')]"
+      },
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "condition": "[equals(parameters('EmailVMInstance'),0)]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('emailVMPrefix'), 'nic', copyindex(1))]",
+      "apiVersion": "2016-03-30",
+      "location": "[parameters('Location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('EmailVMInstance')]"
+      },
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "condition": "[equals(parameters('MongoVMInstance'),0)]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('mongoVMPrefix'), 'nic', copyindex(1))]",
+      "apiVersion": "2016-03-30",
+      "location": "[parameters('Location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('MongoVMInstance')]"
+      },
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "condition": "[equals(parameters('GraphVMInstance'),0)]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('graphVMPrefix'), 'nic', copyindex(1))]",
+      "apiVersion": "2016-03-30",
+      "location": "[parameters('Location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('GraphVMInstance')]"
+      },
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "condition": "[equals(parameters('MySQLVMInstance'),0)]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('mysqlVMPrefix'), 'nic', copyindex(1))]",
+      "apiVersion": "2016-03-30",
+      "location": "[parameters('Location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('MySQLVMInstance')]"
+      },
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "condition": "[equals(parameters('KafkaVMInstance'),0)]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('kafkaVMPrefix'), 'nic', copyindex(1))]",
+      "apiVersion": "2016-03-30",
+      "location": "[parameters('Location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('KafkaVMInstance')]"
+      },
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "condition": "[equals(parameters('ESVMInstance'),0)]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('esVMPrefix'), 'nic', copyindex(1))]",
+      "apiVersion": "2016-03-30",
+      "location": "[parameters('Location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('ESVMInstance')]"
+      },
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "condition": "[equals(parameters('WebVMInstance'),0)]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('VMPrefix'), copyIndex(1))]",
+      "name": "[concat(variables('webVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
       "location": "[parameters('location')]",
       "copy": {
         "name": "virtualMachineLoop",
-        "count": "[parameters('VMInstances')]"
+        "count": "[parameters('WebVMInstance')]"
       },
       "dependsOn": [
         "nicLoop"
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('webavset'))]"
         },
         "hardwareProfile": {
           "vmSize": "Standard_DS11_v2"
         },
         "osProfile": {
-          "computerName": "[concat('vm', copyIndex(1))]",
-          "adminUsername": "[concat(parameters('VMPrefix'), 'admin')]",
+          "computerName": "[concat(variables('webVMPrefix'), copyIndex(1))]",
+          "adminUsername": "[concat('web', 'admin')]",
           "adminPassword": "RestDifficult^3019"
         },
         "storageProfile": {
@@ -201,7 +499,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('VMPrefix'), 'nic', copyindex(1)))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('webVMPrefix'), 'nic', copyindex(1)))]"
             }
           ]
         }
@@ -213,7 +511,7 @@
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('VMPrefix'), copyIndex(1)))]"
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('webVMPrefix'), copyIndex(1)))]"
           ],
           "tags": {
             "displayName": "config"
@@ -225,9 +523,506 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "[variables('scriptUri')]"
+                "[variables('webScriptUri')]"
               ],
-              "commandToExecute": "[variables('scriptCommand')]"
+              "commandToExecute": "[variables('webScriptCommand')]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "condition": "[equals(parameters('AppVMInstance'),0)]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('appVMPrefix'), copyIndex(1))]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('AppVMInstance')]"
+      },
+      "dependsOn": [
+        "nicLoop"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('appavset'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_DS11_v2"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('appVMPrefix'), copyIndex(1))]",
+          "adminUsername": "[concat('app', 'admin')]",
+          "adminPassword": "RestDifficult^3019"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('appVMPrefix'), 'nic', copyindex(1)))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "config",
+          "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('appVMPrefix'), copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "config"
+          },
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('appScriptUri')]"
+              ],
+              "commandToExecute": "[variables('appScriptCommand')]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "condition": "[equals(parameters('EmailVMInstance'),0)]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('emailVMPrefix'), copyIndex(1))]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('EmailVMInstance')]"
+      },
+      "dependsOn": [
+        "nicLoop"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('emailavset'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_DS11_v2"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('emailVMPrefix'), copyIndex(1))]",
+          "adminUsername": "[concat('email', 'admin')]",
+          "adminPassword": "RestDifficult^3019"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('emailVMPrefix'), 'nic', copyindex(1)))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "config",
+          "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('emailVMPrefix'), copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "config"
+          },
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('emailScriptUri')]"
+              ],
+              "commandToExecute": "[variables('emailScriptCommand')]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "condition": "[equals(parameters('MongoVMInstance'),0)]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('mongoVMPrefix'), copyIndex(1))]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('MongoVMInstance')]"
+      },
+      "dependsOn": [
+        "nicLoop"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('mongoavset'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_DS11_v2"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('mongoVMPrefix'), copyIndex(1))]",
+          "adminUsername": "[concat('mongo', 'admin')]",
+          "adminPassword": "RestDifficult^3019"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('mongoVMPrefix'), 'nic', copyindex(1)))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "config",
+          "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('mongoVMPrefix'), copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "config"
+          },
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('mongoScriptUri')]"
+              ],
+              "commandToExecute": "[variables('mongoScriptCommand')]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "condition": "[equals(parameters('GraphVMInstance'),0)]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('graphVMPrefix'), copyIndex(1))]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('GraphVMInstance')]"
+      },
+      "dependsOn": [
+        "nicLoop"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('graphavset'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_DS11_v2"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('graphVMPrefix'), copyIndex(1))]",
+          "adminUsername": "[concat('graph', 'admin')]",
+          "adminPassword": "RestDifficult^3019"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('graphVMPrefix'), 'nic', copyindex(1)))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "config",
+          "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('graphVMPrefix'), copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "config"
+          },
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('graphScriptUri')]"
+              ],
+              "commandToExecute": "[variables('graphScriptCommand')]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "condition": "[equals(parameters('MySQLVMInstance'),0)]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('mysqlVMPrefix'), copyIndex(1))]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('MySQLVMInstance')]"
+      },
+      "dependsOn": [
+        "nicLoop"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('mysqlavset'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_DS11_v2"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('mysqlVMPrefix'), copyIndex(1))]",
+          "adminUsername": "[concat('mysql', 'admin')]",
+          "adminPassword": "RestDifficult^3019"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('mysqlVMPrefix'), 'nic', copyindex(1)))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "config",
+          "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('mysqlVMPrefix'), copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "config"
+          },
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('mysqlScriptUri')]"
+              ],
+              "commandToExecute": "[variables('mysqlScriptCommand')]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "condition": "[equals(parameters('KafkaVMInstance'),0)]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('kafkaVMPrefix'), copyIndex(1))]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('KafkaVMInstance')]"
+      },
+      "dependsOn": [
+        "nicLoop"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('kafkaavset'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_DS11_v2"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('kafkaVMPrefix'), copyIndex(1))]",
+          "adminUsername": "[concat('kafka', 'admin')]",
+          "adminPassword": "RestDifficult^3019"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('kafkaVMPrefix'), 'nic', copyindex(1)))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "config",
+          "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('kafkaVMPrefix'), copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "config"
+          },
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('kafkaScriptUri')]"
+              ],
+              "commandToExecute": "[variables('kafkaScriptCommand')]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "condition": "[equals(parameters('ESVMInstance'),0)]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('esVMPrefix'), copyIndex(1))]",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('ESVMInstance')]"
+      },
+      "dependsOn": [
+        "nicLoop"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('esavset'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_DS11_v2"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('esVMPrefix'), copyIndex(1))]",
+          "adminUsername": "[concat('es', 'admin')]",
+          "adminPassword": "RestDifficult^3019"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('esVMPrefix'), 'nic', copyindex(1)))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "config",
+          "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('esVMPrefix'), copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "config"
+          },
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('esScriptUri')]"
+              ],
+              "commandToExecute": "[variables('esScriptCommand')]"
             }
           }
         }
