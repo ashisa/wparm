@@ -526,9 +526,6 @@
           "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('webVMPrefix'), copyIndex(1)))]"
-          ],
           "tags": {
             "displayName": "config"
           },
@@ -597,9 +594,6 @@
           "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('appVMPrefix'), copyIndex(1)))]"
-          ],
           "tags": {
             "displayName": "config"
           },
@@ -668,9 +662,6 @@
           "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('emailVMPrefix'), copyIndex(1)))]"
-          ],
           "tags": {
             "displayName": "config"
           },
@@ -739,9 +730,6 @@
           "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('mongoVMPrefix'), copyIndex(1)))]"
-          ],
           "tags": {
             "displayName": "config"
           },
@@ -810,9 +798,6 @@
           "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('graphVMPrefix'), copyIndex(1)))]"
-          ],
           "tags": {
             "displayName": "config"
           },
@@ -881,9 +866,6 @@
           "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('mysqlVMPrefix'), copyIndex(1)))]"
-          ],
           "tags": {
             "displayName": "config"
           },
@@ -952,9 +934,6 @@
           "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('kafkaVMPrefix'), copyIndex(1)))]"
-          ],
           "tags": {
             "displayName": "config"
           },
@@ -1023,9 +1002,6 @@
           "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('esVMPrefix'), copyIndex(1)))]"
-          ],
           "tags": {
             "displayName": "config"
           },
