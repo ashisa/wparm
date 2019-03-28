@@ -2,39 +2,91 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminUsername": {
-      "type": "string",
-      "metadata": {
-        "description": "Admin username for VM"
-      }
-    },
-    "adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Admin password for VMs"
-      }
-    },
-    "numberOfInstances": {
+    "WebVmInstance": {
       "type": "int",
-      "defaultValue": 5,
-      "minValue": 2,
-      "maxValue": 5,
+      "defaultValue": 0,
       "metadata": {
-        "description": "Number of VMs to deploy, limit 5 since this sample is using a single storage account"
+        "description": "Number of Web VMs to deploy"
       }
     },
-    "OS": {
+    "AppVmInstance": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of App VMs to deploy"
+      }
+    },
+    "EmailVmInstance": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of Email Analytics VMs to deploy"
+      }
+    },
+    "MongoVmInstance": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of Mongo VMs to deploy"
+      }
+    },
+    "GraphInstance": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of Graph VMs to deploy"
+      }
+    },
+    "MySQLVmInstance": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of VMs to deploy"
+      }
+    },
+    "KafkaVmInstance": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of Kafka VMs to deploy"
+      }
+    },
+    "ElasticVmInstance": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of Elastci Search VMs to deploy"
+      }
+    },
+    "VMInstances": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of VMs to deploy"
+      }
+    },
+    "VMPrefix": {
       "type": "string",
-      "defaultValue": "Ubuntu",
-      "allowedValues": [
-        "Ubuntu",
-        "Windows"
-      ],
+      "defaultValue": "webvm",
       "metadata": {
-        "description": "OS Platform for the VM"
+        "description": "Prefix to use for VMs based on functionality"
       }
     },
-    "location": {
+    "ScriptName": {
+      "type": "string",
+      "defaultValue": "nginx.sh",
+      "metadata": {
+        "description": "Name of the script to execute on these VMs"
+      }
+    },
+    "VNetName": {
+      "type": "string",
+      "defaultValue": "vnet01",
+      "metadata": {
+        "description": "Name of the VNet"
+      }
+    },
+    "Location": {
       "type": "string",
       "defaultValue": "southindia",
       "metadata": {
@@ -43,32 +95,21 @@
     }
   },
   "variables": {
-    "virtualNetworkName": "myVNET",
+    "virtualNetworkName": "[parameters('VNetName')]",
     "addressPrefix": "10.0.0.0/16",
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('virtualNetworkName'),variables('subnet1Name'))]",
-    "availabilitySetName": "webAvSet",
-    "Ubuntu": {
-      "publisher": "Canonical",
-      "offer": "UbuntuServer",
-      "sku": "16.04.0-LTS",
-      "version": "latest"
-    },
-    "Windows": {
-      "publisher": "MicrosoftWindowsServer",
-      "offer": "WindowsServer",
-      "sku": "2016-Datacenter",
-      "version": "latest"
-    },
-    "imageReference": "[variables(parameters('OS'))]"
+    "availabilitySetName": "[concat(parameters('VMPrefix'), 'avset')]",
+    "scriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', parameters('ScriptName'))]",
+    "scriptCommand": "[concat('bash ', parameters('ScriptName'))]"
   },
   "resources": [
     {
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('availabilitySetName')]",
       "apiVersion": "2016-04-30-preview",
-      "location": "[parameters('location')]",
+      "location": "[parameters('Location')]",
       "properties": {
         "platformFaultDomainCount": 2,
         "platformUpdateDomainCount": 2,
@@ -79,7 +120,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "apiVersion": "2016-03-30",
-      "location": "[parameters('location')]",
+      "location": "[parameters('Location')]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -98,12 +139,12 @@
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('webnic', copyindex(1))]",
+      "name": "[concat(parameters('VMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
-      "location": "[parameters('location')]",
+      "location": "[parameters('Location')]",
       "copy": {
         "name": "nicLoop",
-        "count": "[parameters('numberOfInstances')]"
+        "count": "[parameters('VMInstances')]"
       },
       "dependsOn": [
         "[variables('virtualNetworkName')]"
@@ -124,12 +165,12 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('webvm', copyIndex(1))]",
+      "name": "[concat(parameters('VMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
       "location": "[parameters('location')]",
       "copy": {
         "name": "virtualMachineLoop",
-        "count": "[parameters('numberOfInstances')]"
+        "count": "[parameters('VMInstances')]"
       },
       "dependsOn": [
         "nicLoop"
@@ -143,11 +184,16 @@
         },
         "osProfile": {
           "computerName": "[concat('vm', copyIndex(1))]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
+          "adminUsername": "[concat(parameters('VMPrefix'), 'admin')]",
+          "adminPassword": "RestDifficult^3019"
         },
         "storageProfile": {
-          "imageReference": "[variables('imageReference')]",
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
+          },
           "osDisk": {
             "createOption": "FromImage"
           }
@@ -155,7 +201,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('webnic', copyindex(1)))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('VMPrefix'), 'nic', copyindex(1)))]"
             }
           ]
         }
@@ -167,7 +213,7 @@
           "location": "[parameters('location')]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat('webvm', copyIndex(1)))]"
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('VMPrefix'), copyIndex(1)))]"
           ],
           "tags": {
             "displayName": "config"
@@ -179,9 +225,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "https://raw.githubusercontent.com/ashisa/wparm/master/nginx.sh"
+                "[variables('scriptUri')]"
               ],
-              "commandToExecute": "bash nginx.sh"
+              "commandToExecute": "[variables('scriptCommand')]"
             }
           }
         }
