@@ -93,14 +93,6 @@
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('virtualNetworkName'),variables('subnet1Name'))]",
-    "webVMCount": "[if(equals(parameters('WebVMInstance'), 0), 1, parameters('WebVMInstance'))]",
-    "appVMCount": "[if(equals(parameters('AppVMInstance'), 0), 1, parameters('AppVMInstance'))]",
-    "emailVMCount": "[if(equals(parameters('EmailVMInstance'), 0), 1, parameters('EmailVMInstance'))]",
-    "mongoVMCount": "[if(equals(parameters('MongoVMInstance'), 0), 1, parameters('MongoVMInstance'))]",
-    "graphVMCount": "[if(equals(parameters('GraphVMInstance'), 0), 1, parameters('GraphVMInstance'))]",
-    "mysqlVMCount": "[if(equals(parameters('MySQLVMInstance'), 0), 1, parameters('MySQLVMInstance'))]",
-    "kafkaVMCount": "[if(equals(parameters('KafkaVMInstance'), 0), 1, parameters('KafkaVMInstance'))]",
-    "esVMCount": "[if(equals(parameters('ESVMInstance'), 0), 1, parameters('ESVMInstance'))]",
     "webVMPrefix": "webvm",
     "appVMPrefix": "appvm",
     "emailVMPrefix": "emailvm",
@@ -132,7 +124,23 @@
     "kafkaScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
     "kafkaScriptCommand": "[concat('bash ', 'webvm.sh')]",
     "esScriptUri": "[concat('https://raw.githubusercontent.com/ashisa/wparm/master/', 'webvm.sh')]",
-    "esScriptCommand": "[concat('bash ', 'webvm.sh')]"
+    "esScriptCommand": "[concat('bash ', 'webvm.sh')]",
+    "webVMCount": "[if(equals(parameters('WebVMInstance'), 0), 1, parameters('WebVMInstance'))]",
+    "appVMCount": "[if(equals(parameters('AppVMInstance'), 0), 1, parameters('AppVMInstance'))]",
+    "emailVMCount": "[if(equals(parameters('EmailVMInstance'), 0), 1, parameters('EmailVMInstance'))]",
+    "mongoVMCount": "[if(equals(parameters('MongoVMInstance'), 0), 1, parameters('MongoVMInstance'))]",
+    "graphVMCount": "[if(equals(parameters('GraphVMInstance'), 0), 1, parameters('GraphVMInstance'))]",
+    "mysqlVMCount": "[if(equals(parameters('MySQLVMInstance'), 0), 1, parameters('MySQLVMInstance'))]",
+    "kafkaVMCount": "[if(equals(parameters('KafkaVMInstance'), 0), 1, parameters('KafkaVMInstance'))]",
+    "esVMCount": "[if(equals(parameters('ESVMInstance'), 0), 1, parameters('ESVMInstance'))]",
+    "webVMCondition": "[greater(parameters('WebVMInstance'),0)]",
+    "appVMCondition": "[greater(parameters('AppVMInstance'),0)]",
+    "emailVMCondition": "[greater(parameters('EmailVMInstance'),0)]",
+    "mongoVMCondition": "[greater(parameters('MongoVMInstance'),0)]",
+    "graphVMCondition": "[greater(parameters('GraphVMInstance'),0)]",
+    "mysqlVMCondition": "[greater(parameters('MySQLVMInstance'),0)]",
+    "kafkaVMCondition": "[greater(parameters('KafkaVMInstance'),0)]",
+    "esVMCondition": "[greater(parameters('ESVMInstance'),0)]"
   },
   "resources": [
     {
@@ -157,7 +165,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('WebVMInstance'),0)]",
+      "condition": "[variables('webVMCondition')]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('webavset')]",
       "apiVersion": "2016-04-30-preview",
@@ -169,7 +177,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('AppVMInstance'),0)]",
+      "condition": "[variables('appVMCondition')]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('appavset')]",
       "apiVersion": "2016-04-30-preview",
@@ -181,7 +189,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('EmailVMInstance'),0)]",
+      "condition": "[variables('emailVMCondition')]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('emailavset')]",
       "apiVersion": "2016-04-30-preview",
@@ -193,7 +201,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('MongoVMInstance'),0)]",
+      "condition": "[variables('mongoVMCondition')]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('mongoavset')]",
       "apiVersion": "2016-04-30-preview",
@@ -205,7 +213,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('GraphVMInstance'),0)]",
+      "condition": "[variables('graphVMCondition')]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('graphavset')]",
       "apiVersion": "2016-04-30-preview",
@@ -217,7 +225,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('MySQLVMInstance'),0)]",
+      "condition": "[variables('mysqlVMCondition')]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('mysqlavset')]",
       "apiVersion": "2016-04-30-preview",
@@ -229,7 +237,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('KafkaVMInstance'),0)]",
+      "condition": "[variables('kafkaVMCondition')]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('kafkaavset')]",
       "apiVersion": "2016-04-30-preview",
@@ -241,7 +249,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('ESVMInstance'),0)]",
+      "condition": "[variables('esVMCondition')]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('esavset')]",
       "apiVersion": "2016-04-30-preview",
@@ -253,7 +261,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('WebVMInstance'),0)]",
+      "condition": "[variables('webVMCondition')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('webVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
@@ -280,7 +288,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('AppVMInstance'),0)]",
+      "condition": "[variables('appVMCondition')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('appVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
@@ -307,7 +315,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('EmailVMInstance'),0)]",
+      "condition": "[variables('emailVMCondition')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('emailVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
@@ -334,7 +342,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('MongoVMInstance'),0)]",
+      "condition": "[variables('mongoVMCondition')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('mongoVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
@@ -361,7 +369,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('GraphVMInstance'),0)]",
+      "condition": "[variables('graphVMCondition')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('graphVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
@@ -388,7 +396,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('MySQLVMInstance'),0)]",
+      "condition": "[variables('mysqlVMCondition')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('mysqlVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
@@ -415,7 +423,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('KafkaVMInstance'),0)]",
+      "condition": "[variables('kafkaVMCondition')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('kafkaVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
@@ -442,7 +450,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('ESVMInstance'),0)]",
+      "condition": "[variables('esVMCondition')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('esVMPrefix'), 'nic', copyindex(1))]",
       "apiVersion": "2016-03-30",
@@ -469,7 +477,7 @@
       }
     },
     {
-      "condition": "[greater(parameters('WebVMInstance'),0)]",
+      "condition": "[variables('webVMCondition')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('webVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
@@ -540,7 +548,7 @@
       ]
     },
     {
-      "condition": "[greater(parameters('AppVMInstance'),0)]",
+      "condition": "[variables('appVMCondition')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('appVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
@@ -611,7 +619,7 @@
       ]
     },
     {
-      "condition": "[greater(parameters('EmailVMInstance'),0)]",
+      "condition": "[variables('emailVMCondition')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('emailVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
@@ -682,7 +690,7 @@
       ]
     },
     {
-      "condition": "[greater(parameters('MongoVMInstance'),0)]",
+      "condition": "[variables('mongoVMCondition')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('mongoVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
@@ -753,7 +761,7 @@
       ]
     },
     {
-      "condition": "[greater(parameters('GraphVMInstance'),0)]",
+      "condition": "[variables('graphVMCondition')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('graphVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
@@ -824,7 +832,7 @@
       ]
     },
     {
-      "condition": "[greater(parameters('MySQLVMInstance'),0)]",
+      "condition": "[variables('mysqlVMCondition')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('mysqlVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
@@ -895,7 +903,7 @@
       ]
     },
     {
-      "condition": "[greater(parameters('KafkaVMInstance'),0)]",
+      "condition": "[variables('kafkaVMCondition')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('kafkaVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
@@ -966,7 +974,7 @@
       ]
     },
     {
-      "condition": "[greater(parameters('ESVMInstance'),0)]",
+      "condition": "[variables('esVMCondition')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('esVMPrefix'), copyIndex(1))]",
       "apiVersion": "2016-04-30-preview",
