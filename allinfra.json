@@ -2,56 +2,56 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "WebVmInstance": {
+    "WebVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
         "description": "Number of Web VMs to deploy"
       }
     },
-    "AppVmInstance": {
+    "AppVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
         "description": "Number of App VMs to deploy"
       }
     },
-    "EmailVmInstance": {
+    "EmailVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
         "description": "Number of Email Analytics VMs to deploy"
       }
     },
-    "MongoVmInstance": {
+    "MongoVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
         "description": "Number of Mongo VMs to deploy"
       }
     },
-    "GraphInstance": {
+    "GraphVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
         "description": "Number of Graph VMs to deploy"
       }
     },
-    "MySQLVmInstance": {
+    "MySQLVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
         "description": "Number of VMs to deploy"
       }
     },
-    "KafkaVmInstance": {
+    "KafkaVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
         "description": "Number of Kafka VMs to deploy"
       }
     },
-    "ElasticVmInstance": {
+    "ElasticSearchVMInstance": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
